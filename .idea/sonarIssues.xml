@@ -3,22 +3,7 @@
   <component name="issues">
     <option name="index">
       <map>
-        <entry key="/Dummy.txt">
-          <value>
-            <set />
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/.gitignore">
-          <value>
-            <set />
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/src/magazijnapplicatie/IKlant.java">
-          <value>
-            <set />
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/test/magazijnapplicatie/APInterfaceTest.java">
+        <entry key="$PROJECT_DIR$/pom.xml">
           <value>
             <set />
           </value>
