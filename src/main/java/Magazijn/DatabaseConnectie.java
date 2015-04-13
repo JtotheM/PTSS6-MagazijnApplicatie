@@ -4,23 +4,18 @@
  */
 package Magazijn;
 
-import java.io.FileInputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-
 import magazijnapplicatie.IFactuur;
 import magazijnapplicatie.IFactuurRegel;
 import magazijnapplicatie.IKlant;
 import magazijnapplicatie.IOnderdeel;
+
+import javax.swing.*;
+import java.io.FileInputStream;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Rob Maas
