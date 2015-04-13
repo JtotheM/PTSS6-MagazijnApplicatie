@@ -29,10 +29,5 @@
             <artifactId>swing-worker</artifactId>
             <version>1.1</version>
         </dependency>
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>classes12</artifactId>
-            <version>10.2.0.2.0</version>
-        </dependency>
     </dependencies>
 </project>
