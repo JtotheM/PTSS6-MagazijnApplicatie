@@ -151,6 +151,7 @@ public class Beheer implements IMagazijn, APInterface {
      * @return Het klantnummer als de klant correct is toegevoegd, returneert -1 als dit niet het geval is.
      */
     public int VoegKlantToe(String naam, String adres) {
+        int i = 3;
         if (naam.equals("") || naam == null || adres == null || adres.equals("")) {
             return -1;
         }
