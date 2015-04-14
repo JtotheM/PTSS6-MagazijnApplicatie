@@ -29,7 +29,7 @@ public class APInterfaceTest {
      */
     @Test
     public void testVraagOnderdeelOp() {
-        System.out.println("VraagOnderdeelOp");
+        System.out.println("VraagOnderdeelOp2");
         assertTrue(true);
     }
 
@@ -38,7 +38,7 @@ public class APInterfaceTest {
      */
     @Test
     public void testFactuurToeVoegen() {
-        System.out.println("FactuurToeVoegen");
+        System.out.println("FactuurToeVoegen2");
         assertTrue(true);
     }
 }
