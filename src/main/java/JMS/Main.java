@@ -10,6 +10,11 @@ import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * Created by Laurence on 20/6/2015.
  */
@@ -19,32 +24,38 @@ public class Main {
 
     public static void main(String[] args) {
 
+        //List all the channels that we have to support
+        HashMap<String, String> channels = new HashMap<String, String>();
+        channels.put("MessageRequest", "MessageResponse");
+        channels.put("MessageRequest2", "MessageResponse2");
+        channels.put("MessageRequest3", "MessageResponse3");
+
+        //Launch a thread for every channel
+        ArrayList<Thread> threads = new ArrayList<>();
+        Iterator channelIterator = channels.entrySet().iterator();
+        while (channelIterator.hasNext()) {
+            final Map.Entry pair = (Map.Entry) channelIterator.next();
+
+            Thread channelThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    handleChannel((String) pair.getKey(), (String) pair.getValue());
+                }
+            });
+            channelThread.start();
+            threads.add(channelThread);
+            channelIterator.remove();
+        }
+
+
+        //Wait for all threads
         try {
-
-            Thread testChannel1 = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    handleChannel("MessageRequest", "MessageResponse");
-                }
-            });
-            Thread testChannel2 = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    handleChannel("MessageRequest2", "MessageResponse2");
-                }
-            });
-
-            testChannel1.start();
-            testChannel2.start();
-
-            testChannel1.wait();
-            testChannel2.wait();
-
+            for (Thread item : threads) {
+                item.wait();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        System.exit(0);
     }
 
     private static void handleChannel(String receiveChannel, String sendChannel) {
