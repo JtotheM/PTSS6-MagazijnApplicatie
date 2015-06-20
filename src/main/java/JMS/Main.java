@@ -21,15 +21,20 @@ import java.util.Map;
 public class Main {
 
     private static RequestHandler requestHandler = new RequestHandler();
+    private static HashMap<String, String> channels;
 
     public static void main(String[] args) {
 
-        //List all the channels that we have to support
-        HashMap<String, String> channels = new HashMap<String, String>();
+        channels = new HashMap<>();
         channels.put("MessageRequest", "MessageResponse");
         channels.put("MessageRequest2", "MessageResponse2");
         channels.put("MessageRequest3", "MessageResponse3");
 
+        ArrayList<Thread> threads = launchChannelThreads();
+        waitForThreads(threads);
+    }
+
+    private static ArrayList<Thread> launchChannelThreads() {
         //Launch a thread for every channel
         ArrayList<Thread> threads = new ArrayList<>();
         Iterator channelIterator = channels.entrySet().iterator();
@@ -46,8 +51,10 @@ public class Main {
             threads.add(channelThread);
             channelIterator.remove();
         }
+        return threads;
+    }
 
-
+    private static void waitForThreads(ArrayList<Thread> threads) {
         //Wait for all threads
         try {
             for (Thread item : threads) {
