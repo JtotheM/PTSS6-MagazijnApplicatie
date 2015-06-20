@@ -21,11 +21,40 @@ public class Main {
 
         try {
 
+            Thread testChannel1 = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    handleChannel("MessageRequest", "MessageResponse");
+                }
+            });
+            Thread testChannel2 = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    handleChannel("MessageRequest2", "MessageResponse2");
+                }
+            });
+
+            testChannel1.start();
+            testChannel2.start();
+
+            testChannel1.wait();
+            testChannel2.wait();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.exit(0);
+    }
+
+    private static void handleChannel(String receiveChannel, String sendChannel) {
+        try {
+
             ApplicationContext ctx = new ClassPathXmlApplicationContext("app-context.xml");
             JmsMessageSender jmsMessageSender = (JmsMessageSender) ctx.getBean("jmsMessageSender");
 
-            Queue queueRequest = new ActiveMQQueue("MessageRequest");
-            Queue queueSend = new ActiveMQQueue("MessageResponse");
+            Queue queueRequest = new ActiveMQQueue(receiveChannel);
+            Queue queueSend = new ActiveMQQueue(sendChannel);
 
             //TEST CODE! REMOVE PLZ!
             testMessage(jmsMessageSender, queueRequest);
@@ -52,7 +81,7 @@ public class Main {
                     break;
                 }
 
-                String response = requestHandler.handleMessage(request, commands);
+                String response = requestHandler.handleMessage(request, commands, receiveChannel);
                 jmsMessageSender.send(queueSend, response, jmsMessageID);
             }
 
@@ -62,11 +91,9 @@ public class Main {
         } catch (JMSException e) {
             e.printStackTrace();
         }
-
-        System.exit(0);
     }
 
     private static void testMessage(JmsMessageSender jmsMessageSender, Queue queueRequest) {
-        jmsMessageSender.send(queueRequest, "This is an test:to test", "0");
+        jmsMessageSender.send(queueRequest, "Test message", "0");
     }
 }

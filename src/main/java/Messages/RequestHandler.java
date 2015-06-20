@@ -5,7 +5,7 @@ package Messages;
  */
 public class RequestHandler {
 
-    public String handleMessage(String request, String[] commands) {
+    public String handleMessage(String request, String[] commands, String channel) {
         return "OKE!";
     }
 }
