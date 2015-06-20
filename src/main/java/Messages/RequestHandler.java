@@ -4,8 +4,6 @@ import Requests.MainOfficeRequest;
 import Requests.OrderRequest;
 import Requests.WarehouseRequest;
 
-import java.util.Arrays;
-
 /**
  * Created by Laurence on 20/6/2015.
  */
@@ -13,7 +11,7 @@ public class RequestHandler {
 
     public String handleMessage(String request, String channel) {
 
-        String response = "";
+        String response;
         switch (channel) {
             case "OrderRequest":
                 OrderRequest orderRequest = new OrderRequest(request);
