@@ -26,21 +26,23 @@ public class Main {
     public static void main(String[] args) {
 
         channels = new HashMap<>();
-        channels.put("MessageRequest", "MessageResponse");
-        channels.put("MessageRequest2", "MessageResponse2");
-        channels.put("MessageRequest3", "MessageResponse3");
+        channels.put("OrderRequest", "OrderResponse"); //ParafiksitWebI - FontysApp
+        channels.put("WarehouseRequest", "WarehouseResponse"); //MagazijnApp
+        channels.put("MainOfficeRequest", "MainOfficeResponse"); //ParafiksitApp
 
         ArrayList<Thread> threads = launchChannelThreads();
         waitForThreads(threads);
     }
 
     private static ArrayList<Thread> launchChannelThreads() {
+
         //Launch a thread for every channel
         ArrayList<Thread> threads = new ArrayList<>();
         Iterator channelIterator = channels.entrySet().iterator();
         while (channelIterator.hasNext()) {
             final Map.Entry pair = (Map.Entry) channelIterator.next();
 
+            //Start the thread
             Thread channelThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -68,15 +70,18 @@ public class Main {
     private static void handleChannel(String receiveChannel, String sendChannel) {
         try {
 
+            //Get context
             ApplicationContext ctx = new ClassPathXmlApplicationContext("app-context.xml");
             JmsMessageSender jmsMessageSender = (JmsMessageSender) ctx.getBean("jmsMessageSender");
 
+            //Get channels
             Queue queueRequest = new ActiveMQQueue(receiveChannel);
             Queue queueSend = new ActiveMQQueue(sendChannel);
 
             //TEST CODE! REMOVE PLZ!
             testMessage(jmsMessageSender, queueRequest);
 
+            //Keep requesting data
             while (true) {
                 TextMessage receive = jmsMessageSender.receive(queueRequest);
                 if (receive == null)
@@ -85,21 +90,11 @@ public class Main {
                 String message = receive.getText();
                 String jmsMessageID = receive.getJMSMessageID();
 
-                //Get commands from string
-                String[] commands = message.split(":");
-
-                //This should not fail.
-                if (commands.length == 0)
-                    continue;
-
-                //Handle messages
-                String request = commands[0];
-
-                if (request.equals("Quit")) {
+                if (message.equals("Quit")) {
                     break;
                 }
 
-                String response = requestHandler.handleMessage(request, commands, receiveChannel);
+                String response = requestHandler.handleMessage(message, receiveChannel);
                 jmsMessageSender.send(queueSend, response, jmsMessageID);
             }
 
