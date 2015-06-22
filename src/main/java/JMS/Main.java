@@ -48,7 +48,6 @@ public class Main {
 
             //Start the thread
             Thread channelThread = new Thread(new Runnable() {
-                @Override
                 public void run() {
                     handleChannel((String) pair.getKey(), (String) pair.getValue());
                 }

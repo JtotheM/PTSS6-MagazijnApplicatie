@@ -77,9 +77,6 @@ public class Simulation {
 
         } catch (JMSException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-
-
         }
     }
 
