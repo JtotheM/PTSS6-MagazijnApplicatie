@@ -24,4 +24,8 @@ public class Request {
     protected void setResponse(String response) {
         this.response = response;
     }
+
+    public String getCorrelationId() {
+        return correlationId;
+    }
 }

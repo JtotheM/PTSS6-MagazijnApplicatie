@@ -9,22 +9,22 @@ import Requests.WarehouseRequest;
  */
 public class RequestHandler {
 
-    public String handleMessage(String request, String channel) {
+    public String handleMessage(String request, String channel, String correlationId) {
 
         String response;
         switch (channel) {
             case "OrderRequest":
-                OrderRequest orderRequest = new OrderRequest(request);
+                OrderRequest orderRequest = new OrderRequest(request,correlationId);
                 response = orderRequest.getResponse();
                 break;
 
             case "WarehouseRequest":
-                WarehouseRequest warehouseRequest = new WarehouseRequest(request);
+                WarehouseRequest warehouseRequest = new WarehouseRequest(request,correlationId);
                 response = warehouseRequest.getResponse();
                 break;
 
             case "MainOfficeRequest":
-                MainOfficeRequest mainOfficeRequest = new MainOfficeRequest(request);
+                MainOfficeRequest mainOfficeRequest = new MainOfficeRequest(request,correlationId);
                 response = mainOfficeRequest.getResponse();
                 break;
 

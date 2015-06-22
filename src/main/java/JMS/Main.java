@@ -32,8 +32,8 @@ public class Main {
 
         channels = new HashMap<>();
         channels.put("OrderRequest", "OrderResponse"); //ParafiksitWebI - FontysApp
-        channels.put("WarehouseRequest", "WarehouseResponse"); //MagazijnApp
-        channels.put("MainOfficeRequest", "MainOfficeResponse"); //ParafiksitApp
+        channels.put("WarehouseResponse", "WarehouseResponseBack"); //MagazijnApp
+        channels.put("MainOfficeResponse", "MainOfficeResponseBack"); //ParafiksitApp
 
         ArrayList<Thread> threads = launchChannelThreads();
         waitForThreads(threads);
@@ -87,14 +87,16 @@ public class Main {
                     continue;
 
                 String message = receive.getText();
-                String response = requestHandler.handleMessage(message, receiveChannel);
+                String response = requestHandler.handleMessage(message, receiveChannel,receive.getJMSCorrelationID());
                 String jmsMessageID = receive.getJMSMessageID();
 
                 if (message.equals("Quit")) {
                     break;
                 }
 
-                messageId = sendMessage(sendChannel, response, jmsMessageID);
+                if (!response.isEmpty()) {
+                    messageId = sendMessage(sendChannel, response, jmsMessageID);
+                }
             }
 
             ((ClassPathXmlApplicationContext) ctx).close();
