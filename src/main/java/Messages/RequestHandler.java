@@ -11,27 +11,20 @@ public class RequestHandler {
 
     public String handleMessage(String request, String channel, String correlationId) {
 
-        String response;
-        switch (channel) {
-            case "OrderRequest":
-                OrderRequest orderRequest = new OrderRequest(request,correlationId);
-                response = orderRequest.getResponse();
-                break;
+        String response = "";
+        if (channel.equals("OrderRequest")) {
+            OrderRequest orderRequest = new OrderRequest(request, correlationId);
+            response = orderRequest.getResponse();
+        } else if (channel.equals("WarehouseRequest")) {
+            WarehouseRequest warehouseRequest = new WarehouseRequest(request, correlationId);
+            response = warehouseRequest.getResponse();
 
-            case "WarehouseRequest":
-                WarehouseRequest warehouseRequest = new WarehouseRequest(request,correlationId);
-                response = warehouseRequest.getResponse();
-                break;
-
-            case "MainOfficeRequest":
-                MainOfficeRequest mainOfficeRequest = new MainOfficeRequest(request,correlationId);
-                response = mainOfficeRequest.getResponse();
-                break;
-
-            default:
-                System.out.println("Channel is unknown: " + channel);
-                response = "Error";
-                break;
+        } else if (channel.equals("MainOfficeRequest")) {
+            MainOfficeRequest mainOfficeRequest = new MainOfficeRequest(request, correlationId);
+            response = mainOfficeRequest.getResponse();
+        } else {
+            System.out.println("Channel is unknown: " + channel);
+            response = "Error";
         }
 
         System.out.println(request + " on channel " + channel + " response: " + response);

@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class MainOfficeRequest extends Request {
 
-    private static ArrayList<RequestValue> broakerCosts = new ArrayList<>();
+    private static ArrayList<RequestValue> broakerCosts = new ArrayList<RequestValue>();
 
     public MainOfficeRequest(String request, String correlationId) {
         super(request, correlationId);

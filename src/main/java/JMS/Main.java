@@ -24,14 +24,12 @@ public class Main {
     private static RequestHandler requestHandler = new RequestHandler();
     private static HashMap<String, String> channels;
     private static ApplicationContext ctx;
-    private static JmsMessageSender jmsMessageSender;
 
     public static void main(String[] args) {
 
         Main.ctx = new ClassPathXmlApplicationContext("app-context.xml");
-        Main.jmsMessageSender = (JmsMessageSender) Main.ctx.getBean("jmsMessageSender");
 
-        channels = new HashMap<>();
+        channels = new HashMap<String, String>();
         channels.put("OrderRequest", "OrderResponse"); //ParafiksitWebI - FontysApp
         channels.put("WarehouseResponse", "WarehouseResponseBack"); //MagazijnApp
         channels.put("MainOfficeResponse", "MainOfficeResponseBack"); //ParafiksitApp
@@ -43,7 +41,7 @@ public class Main {
     private static ArrayList<Thread> launchChannelThreads() {
 
         //Launch a thread for every channel
-        ArrayList<Thread> threads = new ArrayList<>();
+        ArrayList<Thread> threads = new ArrayList<Thread>();
         Iterator channelIterator = channels.entrySet().iterator();
         while (channelIterator.hasNext()) {
             final Map.Entry pair = (Map.Entry) channelIterator.next();
@@ -76,8 +74,7 @@ public class Main {
     }
 
     private static String handleChannel(String receiveChannel, String sendChannel) {
-
-        String messageId = "";
+                String messageId = "";
         try {
 
             //Get channels
@@ -85,7 +82,9 @@ public class Main {
 
             //Keep requesting data
             while (true) {
-                TextMessage receive = jmsMessageSender.receive(queueRequest);
+                JmsMessageSender jmsMessageSender = (JmsMessageSender) Main.ctx.getBean("jmsMessageSender");
+
+                TextMessage receive = jmsMessageSender.receive(queueRequest,receiveChannel);
                 if (receive == null)
                     continue;
 
@@ -114,6 +113,7 @@ public class Main {
 
     public static String sendMessage(String sendChannel, String message, String jmsMessageID) {
         Queue queueSend = new ActiveMQQueue(sendChannel);
+        JmsMessageSender jmsMessageSender = (JmsMessageSender) Main.ctx.getBean("jmsMessageSender");
         return jmsMessageSender.send(queueSend, message, jmsMessageID);
     }
 }
