@@ -26,8 +26,6 @@ public class Main {
     private static ApplicationContext ctx;
     private static JmsMessageSender jmsMessageSender;
 
-    private static final Object lock = new Object();
-
     public static void main(String[] args) {
 
         Main.ctx = new ClassPathXmlApplicationContext("app-context.xml");
@@ -68,7 +66,7 @@ public class Main {
         //Wait for all threads
         try {
             for (Thread item : threads) {
-                synchronized(Main.lock) {
+                synchronized(item) {
                     item.wait();
                 }
             }
