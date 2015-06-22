@@ -18,12 +18,15 @@ import java.util.Map;
 /**
  * Created by Laurence on 20/6/2015.
  */
+
 public class Main {
 
     private static RequestHandler requestHandler = new RequestHandler();
     private static HashMap<String, String> channels;
     private static ApplicationContext ctx;
     private static JmsMessageSender jmsMessageSender;
+
+    private static final Object lock = new Object();
 
     public static void main(String[] args) {
 
@@ -65,7 +68,9 @@ public class Main {
         //Wait for all threads
         try {
             for (Thread item : threads) {
-                item.wait();
+                synchronized(Main.lock) {
+                    item.wait();
+                }
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
