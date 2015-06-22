@@ -22,8 +22,13 @@ public class Main {
 
     private static RequestHandler requestHandler = new RequestHandler();
     private static HashMap<String, String> channels;
+    private static ApplicationContext ctx;
+    private static JmsMessageSender jmsMessageSender;
 
     public static void main(String[] args) {
+
+        Main.ctx = new ClassPathXmlApplicationContext("app-context.xml");
+        Main.jmsMessageSender = (JmsMessageSender) Main.ctx.getBean("jmsMessageSender");
 
         channels = new HashMap<>();
         channels.put("OrderRequest", "OrderResponse"); //ParafiksitWebI - FontysApp
@@ -67,19 +72,13 @@ public class Main {
         }
     }
 
-    private static void handleChannel(String receiveChannel, String sendChannel) {
-        try {
+    private static String handleChannel(String receiveChannel, String sendChannel) {
 
-            //Get context
-            ApplicationContext ctx = new ClassPathXmlApplicationContext("app-context.xml");
-            JmsMessageSender jmsMessageSender = (JmsMessageSender) ctx.getBean("jmsMessageSender");
+        String messageId = "";
+        try {
 
             //Get channels
             Queue queueRequest = new ActiveMQQueue(receiveChannel);
-            Queue queueSend = new ActiveMQQueue(sendChannel);
-
-            //TEST CODE! REMOVE PLZ!
-            testMessage(jmsMessageSender, queueRequest);
 
             //Keep requesting data
             while (true) {
@@ -88,14 +87,14 @@ public class Main {
                     continue;
 
                 String message = receive.getText();
+                String response = requestHandler.handleMessage(message, receiveChannel);
                 String jmsMessageID = receive.getJMSMessageID();
 
                 if (message.equals("Quit")) {
                     break;
                 }
 
-                String response = requestHandler.handleMessage(message, receiveChannel);
-                jmsMessageSender.send(queueSend, response, jmsMessageID);
+                messageId = sendMessage(sendChannel, response, jmsMessageID);
             }
 
             ((ClassPathXmlApplicationContext) ctx).close();
@@ -104,9 +103,12 @@ public class Main {
         } catch (JMSException e) {
             e.printStackTrace();
         }
+
+        return messageId;
     }
 
-    private static void testMessage(JmsMessageSender jmsMessageSender, Queue queueRequest) {
-        jmsMessageSender.send(queueRequest, "Test message", "0");
+    public static String sendMessage(String sendChannel, String message, String jmsMessageID) {
+        Queue queueSend = new ActiveMQQueue(sendChannel);
+        return jmsMessageSender.send(queueSend, message, jmsMessageID);
     }
 }

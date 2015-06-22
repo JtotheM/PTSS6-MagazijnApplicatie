@@ -6,9 +6,11 @@ package Requests;
 public class Request {
     private String request;
     private String response;
+    private String correlationId;
 
-    public Request(String request) {
+    public Request(String request, String correlationId) {
         this.request = request;
+        this.correlationId = correlationId;
     }
 
     public String getRequest() {

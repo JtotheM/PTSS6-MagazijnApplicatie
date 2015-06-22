@@ -5,12 +5,17 @@ package Requests;
  */
 public class WarehouseRequest extends Request{
 
-    public WarehouseRequest(String request) {
-        super(request);
+    public WarehouseRequest(String request,String correlationId) {
+        super(request,correlationId);
         process();
     }
 
     private void process() {
         this.setResponse(this.getRequest());
+    }
+
+    public static Integer getPrice(String messageId) {
+
+
     }
 }

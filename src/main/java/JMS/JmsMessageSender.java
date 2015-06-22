@@ -13,16 +13,19 @@ public class JmsMessageSender {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    public void send(final Destination dest, final String text, final String correlationId) {
+    public String send(final Destination dest, final String text, final String correlationId) {
 
-        this.jmsTemplate.send(dest, new MessageCreator() {
-            @Override
-            public Message createMessage(Session session) throws JMSException {
-                Message message = session.createTextMessage(text);
-                message.setJMSCorrelationID(correlationId);
-                return message;
-            }
-        });
+        String messageId = "";
+        try {
+            BroakerMessageCreator messageCreator = new BroakerMessageCreator(text);
+            messageId = messageCreator.getMessage().getJMSMessageID();
+            this.jmsTemplate.send(dest, messageCreator);
+
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
+
+        return messageId;
     }
 
     public TextMessage receive(final Destination dest) {
