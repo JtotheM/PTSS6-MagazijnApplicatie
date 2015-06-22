@@ -54,6 +54,7 @@ public class Simulation {
             sendMessage("OrderRequest", gson.toJson(requestObject), "-1");
 
             //Test
+            Simulation.jmsMessageSender = (JmsMessageSender) Simulation.ctx.getBean("jmsMessageSender");
             receive = jmsMessageSender.receive(OrderRequest, "");
             jmsMessageID = receive.getJMSMessageID();
 
