@@ -54,16 +54,20 @@ public class Simulation {
             sendMessage("OrderRequest", gson.toJson(requestObject), "-1");
 
             //Wait for the warehouse request
-            receive = jmsMessageSender.receive(warehouseRequest, "");
-            jmsMessageID = receive.getJMSMessageID();
+            for( int i = 0; i < 2; i++) {
+                receive = jmsMessageSender.receive(warehouseRequest, "");
+                jmsMessageID = receive.getJMSMessageID();
 
-            sendMessage("WarehouseResponse",price.toString(),jmsMessageID);
+                sendMessage("WarehouseResponse", price.toString(), jmsMessageID);
+            }
 
             //Wait for the main office request
-            receive = jmsMessageSender.receive(mainOfficeRequest, "");
-            jmsMessageID = receive.getJMSMessageID();
+            for( int i = 0; i < 2; i++) {
+                receive = jmsMessageSender.receive(mainOfficeRequest, "");
+                jmsMessageID = receive.getJMSMessageID();
 
-            sendMessage("MainOfficeResponse",price.toString(),jmsMessageID);
+                sendMessage("MainOfficeResponse", price.toString(), jmsMessageID);
+            }
 
             //Wait for the total order
             receive = jmsMessageSender.receive(orderResponse,"");
