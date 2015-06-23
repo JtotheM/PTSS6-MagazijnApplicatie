@@ -1,8 +1,9 @@
-package JMS;
+package TestCode;
 
 import javax.annotation.Resource;
 import javax.jms.*;
 
+import JMS.JmsMessageSender;
 import Messages.RequestHandler;
 import Models.OfferRequest;
 import com.google.gson.Gson;
@@ -42,7 +43,6 @@ public class Simulation {
             Queue warehouseRequest = new ActiveMQQueue("WarehouseRequest");
             Queue mainOfficeRequest = new ActiveMQQueue("MainOfficeRequest");
             Queue orderResponse = new ActiveMQQueue("OrderResponse");
-            Queue OrderRequest = new ActiveMQQueue("OrderRequest");
 
             //Send a order
             ArrayList<String> test = new ArrayList<String>();
@@ -52,11 +52,6 @@ public class Simulation {
             OfferRequest requestObject = new OfferRequest("test","test","test","test","test","test","test","test","test","test","test",test,test);
             Gson gson = new Gson();
             sendMessage("OrderRequest", gson.toJson(requestObject), "-1");
-
-            //Test
-            Simulation.jmsMessageSender = (JmsMessageSender) Simulation.ctx.getBean("jmsMessageSender");
-            receive = jmsMessageSender.receive(OrderRequest, "");
-            jmsMessageID = receive.getJMSMessageID();
 
             //Wait for the warehouse request
             receive = jmsMessageSender.receive(warehouseRequest, "");

@@ -18,6 +18,7 @@ public class JmsMessageSender {
         String messageId = "";
         try {
             BroakerMessageCreator messageCreator = new BroakerMessageCreator(text);
+            this.jmsTemplate.send(dest, messageCreator);
 
             //Retry on failed message
             Message message = messageCreator.getMessage();
@@ -26,7 +27,7 @@ public class JmsMessageSender {
             }
 
             messageId = message.getJMSMessageID();
-            this.jmsTemplate.send(dest, messageCreator);
+
         } catch (JMSException e) {
             e.printStackTrace();
         }
