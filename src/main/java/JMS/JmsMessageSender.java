@@ -18,7 +18,14 @@ public class JmsMessageSender {
         String messageId = "";
         try {
             BroakerMessageCreator messageCreator = new BroakerMessageCreator(text);
-            messageId = messageCreator.getMessage().getJMSMessageID();
+
+            //Retry on failed message
+            Message message = messageCreator.getMessage();
+            if(message == null) {
+                return this.send(dest,text,correlationId);
+            }
+
+            messageId = message.getJMSMessageID();
             this.jmsTemplate.send(dest, messageCreator);
 
         } catch (JMSException e) {
