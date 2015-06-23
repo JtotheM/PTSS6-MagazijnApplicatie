@@ -24,7 +24,7 @@ public class OrderRequest extends Request {
 
         //Ask the warehouse if there are new items
         ArrayList<String> parts = orderRequest.getParts();
-        ArrayList<RequestValue> warehouseRequests = new ArrayList<>();
+        ArrayList<RequestValue> warehouseRequests = new ArrayList<RequestValue>();
         for (String part : parts) {
             String json = gson.toJson(part);
             String warehouseRequest = Main.sendMessage("WarehouseRequest", json, "-1");
@@ -39,7 +39,7 @@ public class OrderRequest extends Request {
 
         //Ask what it cost to do the labor
         ArrayList<String> operations = orderRequest.getOpperations();
-        ArrayList<RequestValue> operationsRequest = new ArrayList<>();
+        ArrayList<RequestValue> operationsRequest = new ArrayList<RequestValue>();
         for (String operation : operations) {
             String json = gson.toJson(operation);
             String operationRequest = Main.sendMessage("MainOfficeRequest", json, "-1");

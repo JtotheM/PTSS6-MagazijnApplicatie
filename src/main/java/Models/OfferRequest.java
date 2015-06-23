@@ -20,6 +20,25 @@ public class OfferRequest {
     private ArrayList<String> Opperations;
     private ArrayList<String> Parts;
 
+    public OfferRequest() {
+    }
+
+    public OfferRequest(String client, String clientName, String contactPerson, String phone, String shippingAddres, String street, String houseNumber, String zipcode, String city, String description, String comments, ArrayList<String> opperations, ArrayList<String> parts) {
+        this.client = client;
+        this.clientName = clientName;
+        ContactPerson = contactPerson;
+        Phone = phone;
+        ShippingAddres = shippingAddres;
+        Street = street;
+        HouseNumber = houseNumber;
+        Zipcode = zipcode;
+        City = city;
+        Description = description;
+        Comments = comments;
+        Opperations = opperations;
+        Parts = parts;
+    }
+
     public String getClient() {
         return client;
     }

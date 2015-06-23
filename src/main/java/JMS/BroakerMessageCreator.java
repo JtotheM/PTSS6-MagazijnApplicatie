@@ -25,11 +25,11 @@ public class BroakerMessageCreator implements MessageCreator, Serializable {
     @Override
     public Message createMessage(Session session) throws JMSException
     {
-        message = session.createTextMessage(messageString);
-        return message;
+        this.message = session.createTextMessage(messageString);
+        return this.message;
     }
 
     public Message getMessage() {
-        return message;
+        return this.message;
     }
 }
