@@ -38,11 +38,11 @@ public class JmsMessageSender {
     public TextMessage receive(final Destination dest) {
         while (true) {
 
-            this.jmsTemplate.setReceiveTimeout(250);
+            //this.jmsTemplate.setReceiveTimeout(250);
             TextMessage receive = (TextMessage) this.jmsTemplate.receive(dest);
             if (receive == null) {
                 try {
-                    Thread.sleep(250);
+                    Thread.sleep(10);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
