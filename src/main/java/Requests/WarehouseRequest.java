@@ -33,7 +33,7 @@ public class WarehouseRequest extends Request{
         while (true) {
             try {
                 for (RequestValue cost : WarehouseRequest.broakerCosts) {
-                    if (cost.getMessageId() != null && cost.getMessageId().equals(messageId)) {
+                    if ( cost.getMessageId().equals(messageId)) {
                         return Integer.parseInt(cost.getValue());
                     }
                 }
