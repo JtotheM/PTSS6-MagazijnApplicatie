@@ -27,7 +27,8 @@ public class Main {
         Main.ctx = new ClassPathXmlApplicationContext("app-context.xml");
 
         channels = new HashMap<String, String>();
-        channels.put("OrderRequest", "OrderResponse"); //ParafiksitWebI - FontysApp
+        channels.put("OrderRequest", "OrderResponse"); //ParafiksitWebI
+        channels.put("OrderRequestFontys", "OrderResponseFontys"); //FontysApp
         channels.put("WarehouseResponse", "WarehouseResponseBack"); //MagazijnApp
         channels.put("MainOfficeResponse", "MainOfficeResponseBack"); //ParafiksitApp
 

@@ -12,7 +12,7 @@ public class RequestHandle {
     public String handleMessage(String request, String channel, String correlationId) {
 
         String response = "";
-        if (channel.equals("OrderRequest")) {
+        if (channel.equals("OrderRequest") || channel.equals("OrderRequestFontys")) {
             OrderRequest orderRequest = new OrderRequest(request, correlationId);
             response = orderRequest.getResponse();
         } else if (channel.equals("WarehouseResponse")) {

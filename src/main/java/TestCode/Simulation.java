@@ -40,7 +40,7 @@ public class Simulation {
             //Get channels
             Queue warehouseRequest = new ActiveMQQueue("WarehouseRequest");
             Queue mainOfficeRequest = new ActiveMQQueue("MainOfficeRequest");
-            Queue orderResponse = new ActiveMQQueue("OrderResponse");
+            Queue orderResponse = new ActiveMQQueue("OrderResponseFontys");
 
             //Send a order
             ArrayList<String> test = new ArrayList<String>();
@@ -49,7 +49,7 @@ public class Simulation {
 
             OfferRequest requestObject = new OfferRequest("test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", test, test);
             Gson gson = new Gson();
-            sendMessage("OrderRequest", gson.toJson(requestObject), "-1");
+            sendMessage("OrderRequestFontys", gson.toJson(requestObject), "-1");
 
             //Wait for the warehouse request
             for (int i = 0; i < 2; i++) {
