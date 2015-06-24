@@ -5,6 +5,7 @@ import javax.jms.*;
 
 import JMS.JmsMessageSender;
 import Models.OfferRequest;
+import Models.WorkRequest;
 import com.google.gson.Gson;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.context.ApplicationContext;
@@ -12,8 +13,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Created by Laurence on 20/6/2015.
@@ -27,6 +26,13 @@ public class Simulation {
 
     public static void main(String[] args) {
 
+        while(true) {
+            simulation();
+        }
+    }
+
+    private static void simulation() {
+        //Get message system
         Simulation.ctx = new ClassPathXmlApplicationContext("app-context.xml");
         Simulation.jmsMessageSender = (JmsMessageSender) Simulation.ctx.getBean("jmsMessageSender");
 
@@ -55,6 +61,7 @@ public class Simulation {
             for (int i = 0; i < 2; i++) {
                 receive = jmsMessageSender.receive(warehouseRequest);
                 jmsMessageID = receive.getJMSMessageID();
+                WorkRequest request = gson.fromJson(receive.getText(), WorkRequest.class);
 
                 sendMessage("WarehouseResponse", price.toString(), jmsMessageID);
             }
@@ -63,6 +70,7 @@ public class Simulation {
             for (int i = 0; i < 2; i++) {
                 receive = jmsMessageSender.receive(mainOfficeRequest);
                 jmsMessageID = receive.getJMSMessageID();
+                WorkRequest request = gson.fromJson(receive.getText(), WorkRequest.class);
 
                 sendMessage("MainOfficeResponse", price.toString(), jmsMessageID);
             }
@@ -73,6 +81,7 @@ public class Simulation {
 
             System.out.println(result);
 
+            //Close the connection
             ((ClassPathXmlApplicationContext) ctx).close();
 
         } catch (JMSException e) {

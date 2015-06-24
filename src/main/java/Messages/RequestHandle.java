@@ -12,13 +12,14 @@ public class RequestHandle {
     public String handleMessage(String request, String channel, String correlationId) {
 
         String response = "";
+
+        //Handle each chanel
         if (channel.equals("OrderRequest") || channel.equals("OrderRequestFontys")) {
             OrderRequest orderRequest = new OrderRequest(request, correlationId);
             response = orderRequest.getResponse();
         } else if (channel.equals("WarehouseResponse")) {
             WarehouseRequest warehouseRequest = new WarehouseRequest(request, correlationId);
             response = warehouseRequest.getResponse();
-
         } else if (channel.equals("MainOfficeResponse")) {
             MainOfficeRequest mainOfficeRequest = new MainOfficeRequest(request, correlationId);
             response = mainOfficeRequest.getResponse();

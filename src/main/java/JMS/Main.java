@@ -26,6 +26,7 @@ public class Main {
 
         Main.ctx = new ClassPathXmlApplicationContext("app-context.xml");
 
+        //Channels that we support. The Request Handle will handle them on chanel name
         channels = new HashMap<String, String>();
         channels.put("OrderRequest", "OrderResponse"); //ParafiksitWebI
         channels.put("OrderRequestFontys", "OrderResponseFontys"); //FontysApp
@@ -58,7 +59,7 @@ public class Main {
     }
 
     private static void waitForThreads(ArrayList<Thread> threads) {
-        //Wait for all threads
+        //Wait for all threads to finish
         try {
             for (Thread item : threads) {
                 synchronized (item) {
@@ -85,22 +86,26 @@ public class Main {
             if (receive == null)
                 continue;
 
+            //Handle the message in another thread. Now you can handle multiple requests
             Thread handler = new Thread(new Runnable() {
                 public void run() {
                     String message = null;
                     try {
                         message = receive.getText();
 
+                        //Handle message
                         String response = requestHandler.handleMessage(message, receiveChannel, receive.getJMSCorrelationID());
-                        String jmsMessageID = receive.getJMSMessageID();
 
                         if (message.equals("Quit")) {
                             return;
                         }
 
+                        //Send response
+                        String jmsMessageID = receive.getJMSMessageID();
                         if (response != null) {
                             sendMessage(sendChannel, response, jmsMessageID);
                         }
+
                     } catch (JMSException e) {
                         e.printStackTrace();
                     }

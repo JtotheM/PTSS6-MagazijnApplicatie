@@ -6,37 +6,35 @@ import java.util.ArrayList;
  * Created by Laurence on 20/6/2015.
  */
 public class OfferRequest {
+
     private String client;
     private String clientName;
-    private String ContactPerson;
-    private String Phone;
-    private String ShippingAddres ;
-    private String Street ;
-    private String HouseNumber ;
-    private String Zipcode ;
-    private String City ;
-    private String Description ;
-    private String Comments ;
-    private ArrayList<String> Opperations;
-    private ArrayList<String> Parts;
-
-    public OfferRequest() {
-    }
+    private String contactPerson;
+    private String phone;
+    private String shippingAddres;
+    private String street;
+    private String houseNumber;
+    private String zipcode;
+    private String city;
+    private String description;
+    private String comments;
+    private ArrayList<String> opperations;
+    private ArrayList<String> parts;
 
     public OfferRequest(String client, String clientName, String contactPerson, String phone, String shippingAddres, String street, String houseNumber, String zipcode, String city, String description, String comments, ArrayList<String> opperations, ArrayList<String> parts) {
         this.client = client;
         this.clientName = clientName;
-        ContactPerson = contactPerson;
-        Phone = phone;
-        ShippingAddres = shippingAddres;
-        Street = street;
-        HouseNumber = houseNumber;
-        Zipcode = zipcode;
-        City = city;
-        Description = description;
-        Comments = comments;
-        Opperations = opperations;
-        Parts = parts;
+        this.contactPerson = contactPerson;
+        this.phone = phone;
+        this.shippingAddres = shippingAddres;
+        this.street = street;
+        this.houseNumber = houseNumber;
+        this.zipcode = zipcode;
+        this.city = city;
+        this.description = description;
+        this.comments = comments;
+        this.opperations = opperations;
+        this.parts = parts;
     }
 
     public String getClient() {
@@ -48,46 +46,46 @@ public class OfferRequest {
     }
 
     public String getContactPerson() {
-        return ContactPerson;
+        return contactPerson;
     }
 
     public String getPhone() {
-        return Phone;
+        return phone;
     }
 
     public String getShippingAddres() {
-        return ShippingAddres;
+        return shippingAddres;
     }
 
     public String getStreet() {
-        return Street;
+        return street;
     }
 
     public String getHouseNumber() {
-        return HouseNumber;
+        return houseNumber;
     }
 
     public String getZipcode() {
-        return Zipcode;
+        return zipcode;
     }
 
     public String getCity() {
-        return City;
+        return city;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public String getComments() {
-        return Comments;
+        return comments;
     }
 
     public ArrayList<String> getOpperations() {
-        return Opperations;
+        return opperations;
     }
 
     public ArrayList<String> getParts() {
-        return Parts;
+        return parts;
     }
 }

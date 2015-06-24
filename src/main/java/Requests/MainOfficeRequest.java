@@ -16,6 +16,7 @@ public class MainOfficeRequest extends Request {
 
     private void process() {
 
+        //Process response. Add the offer in memory
         String request = this.getRequest();
 
         Integer price = 0;
@@ -30,6 +31,7 @@ public class MainOfficeRequest extends Request {
 
     public static Integer getPrice(String messageId) {
 
+        //Wait for the correct item
         while (true) {
             try {
                 for (RequestValue cost : MainOfficeRequest.broakerCosts) {

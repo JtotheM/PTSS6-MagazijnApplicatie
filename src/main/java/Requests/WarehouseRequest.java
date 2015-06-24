@@ -16,6 +16,7 @@ public class WarehouseRequest extends Request{
 
     private void process() {
 
+        //Process prices
         String request = this.getRequest();
 
         Integer price = 0;
@@ -30,6 +31,7 @@ public class WarehouseRequest extends Request{
 
     public static Integer getPrice(String messageId) {
 
+        //Wait for the price to arrive
         while (true) {
             try {
                 for (RequestValue cost : WarehouseRequest.broakerCosts) {

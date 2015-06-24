@@ -10,33 +10,33 @@ import java.util.ArrayList;
 public class OfferRequestProcessed {
     private String client;
     private String clientName;
-    private String ContactPerson;
-    private String Phone;
-    private String ShippingAddres ;
-    private String Street ;
-    private String HouseNumber ;
-    private String Zipcode ;
-    private String City ;
-    private String Description ;
-    private String Comments ;
-    private ArrayList<String> Opperations;
-    private ArrayList<String> Parts;
+    private String contactPerson;
+    private String phone;
+    private String shippingAddres;
+    private String street;
+    private String houseNumber;
+    private String zipcode;
+    private String city;
+    private String description;
+    private String comments;
+    private ArrayList<String> opperations;
+    private ArrayList<String> parts;
     private ArrayList<BroakerCost> broakerCosts;
 
     public OfferRequestProcessed(OfferRequest offerRequest, ArrayList<BroakerCost> broakerCosts) {
         this.client = offerRequest.getClient();
         this.clientName = offerRequest.getClientName();
-        this.ContactPerson = offerRequest.getContactPerson();
-        this.Phone = offerRequest.getPhone();
-        this.ShippingAddres = offerRequest.getShippingAddres();
-        this.Street = offerRequest.getStreet();
-        this.HouseNumber = offerRequest.getHouseNumber();
-        this.Zipcode = offerRequest.getZipcode();
-        this.City = offerRequest.getCity();
-        this.Description = offerRequest.getDescription();
-        this.Comments = offerRequest.getComments();
-        this.Opperations = offerRequest.getOpperations();
-        this.Parts = offerRequest.getParts();
+        this.contactPerson = offerRequest.getContactPerson();
+        this.phone = offerRequest.getPhone();
+        this.shippingAddres = offerRequest.getShippingAddres();
+        this.street = offerRequest.getStreet();
+        this.houseNumber = offerRequest.getHouseNumber();
+        this.zipcode = offerRequest.getZipcode();
+        this.city = offerRequest.getCity();
+        this.description = offerRequest.getDescription();
+        this.comments = offerRequest.getComments();
+        this.opperations = offerRequest.getOpperations();
+        this.parts = offerRequest.getParts();
         this.broakerCosts = broakerCosts;
     }
 
@@ -49,47 +49,47 @@ public class OfferRequestProcessed {
     }
 
     public String getContactPerson() {
-        return ContactPerson;
+        return contactPerson;
     }
 
     public String getPhone() {
-        return Phone;
+        return phone;
     }
 
     public String getShippingAddres() {
-        return ShippingAddres;
+        return shippingAddres;
     }
 
     public String getStreet() {
-        return Street;
+        return street;
     }
 
     public String getHouseNumber() {
-        return HouseNumber;
+        return houseNumber;
     }
 
     public String getZipcode() {
-        return Zipcode;
+        return zipcode;
     }
 
     public String getCity() {
-        return City;
+        return city;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public String getComments() {
-        return Comments;
+        return comments;
     }
 
     public ArrayList<String> getOpperations() {
-        return Opperations;
+        return opperations;
     }
 
     public ArrayList<String> getParts() {
-        return Parts;
+        return parts;
     }
 
     public ArrayList<BroakerCost> getBroakerCosts() {
