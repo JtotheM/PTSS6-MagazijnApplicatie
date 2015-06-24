@@ -5,15 +5,12 @@ import javax.jms.JMSException;
 import javax.jms.Queue;
 import javax.jms.TextMessage;
 
-import Messages.RequestHandler;
+import Messages.RequestHandle;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Laurence on 20/6/2015.
@@ -21,7 +18,7 @@ import java.util.Map;
 
 public class Main {
 
-    private static RequestHandler requestHandler = new RequestHandler();
+    private static RequestHandle requestHandler = new RequestHandle();
     private static HashMap<String, String> channels;
     private static ApplicationContext ctx;
 
@@ -63,7 +60,7 @@ public class Main {
         //Wait for all threads
         try {
             for (Thread item : threads) {
-                synchronized(item) {
+                synchronized (item) {
                     item.wait();
                 }
             }
@@ -72,42 +69,45 @@ public class Main {
         }
     }
 
-    private static String handleChannel(String receiveChannel, String sendChannel) {
-                String messageId = "";
-        try {
+    private static void handleChannel(final String receiveChannel, final String sendChannel) {
 
-            //Get channels
-            Queue queueRequest = new ActiveMQQueue(receiveChannel);
+        //Get channels
+        Queue queueRequest = new ActiveMQQueue(receiveChannel);
 
-            //Keep requesting data
-            while (true) {
-                JmsMessageSender jmsMessageSender = (JmsMessageSender) Main.ctx.getBean("jmsMessageSender");
+        final List<Thread> processors = new ArrayList<Thread>();
 
-                TextMessage receive = jmsMessageSender.receive(queueRequest,receiveChannel);
-                if (receive == null)
-                    continue;
+        //Keep requesting data
+        while (true) {
+            JmsMessageSender jmsMessageSender = (JmsMessageSender) Main.ctx.getBean("jmsMessageSender");
 
-                String message = receive.getText();
-                String response = requestHandler.handleMessage(message, receiveChannel,receive.getJMSCorrelationID());
-                String jmsMessageID = receive.getJMSMessageID();
+            final TextMessage receive = jmsMessageSender.receive(queueRequest, receiveChannel);
+            if (receive == null)
+                continue;
 
-                if (message.equals("Quit")) {
-                    break;
+            Thread handler = new Thread(new Runnable() {
+                public void run() {
+                    String message = null;
+                    try {
+                        message = receive.getText();
+
+                        String response = requestHandler.handleMessage(message, receiveChannel, receive.getJMSCorrelationID());
+                        String jmsMessageID = receive.getJMSMessageID();
+
+                        if (message.equals("Quit")) {
+                            return;
+                        }
+
+                        if (!response.isEmpty()) {
+                            sendMessage(sendChannel, response, jmsMessageID);
+                        }
+                    } catch (JMSException e) {
+                        e.printStackTrace();
+                    }
                 }
-
-                if (!response.isEmpty()) {
-                    messageId = sendMessage(sendChannel, response, jmsMessageID);
-                }
-            }
-
-            ((ClassPathXmlApplicationContext) ctx).close();
-
-
-        } catch (JMSException e) {
-            e.printStackTrace();
+            });
+            handler.start();
+            processors.add(handler);
         }
-
-        return messageId;
     }
 
     public static String sendMessage(String sendChannel, String message, String jmsMessageID) {

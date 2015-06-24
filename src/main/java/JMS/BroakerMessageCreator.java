@@ -14,18 +14,20 @@ public class BroakerMessageCreator implements MessageCreator, Serializable {
     private static final long serialVersionUID = 1198353391423668110L;
 
     private String messageString;
+    private String correlationId;
 
     private Message message;
 
-    public BroakerMessageCreator(String messageString)
+    public BroakerMessageCreator(String messageString, String correlationId)
     {
         this.messageString = messageString;
+        this.correlationId = correlationId;
     }
 
-    @Override
     public Message createMessage(Session session) throws JMSException
     {
         this.message = session.createTextMessage(messageString);
+        this.message.setJMSCorrelationID(this.correlationId);
         return this.message;
     }
 

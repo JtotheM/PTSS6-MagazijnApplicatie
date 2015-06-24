@@ -4,7 +4,6 @@ import javax.annotation.Resource;
 import javax.jms.*;
 
 import JMS.JmsMessageSender;
-import Messages.RequestHandler;
 import Models.OfferRequest;
 import com.google.gson.Gson;
 import org.apache.activemq.command.ActiveMQQueue;
@@ -22,7 +21,6 @@ import java.util.Map;
 
 public class Simulation {
 
-    private static RequestHandler requestHandler = new RequestHandler();
     private static HashMap<String, String> channels;
     private static ApplicationContext ctx;
     private static JmsMessageSender jmsMessageSender;
