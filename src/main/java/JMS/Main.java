@@ -80,7 +80,7 @@ public class Main {
         while (true) {
             JmsMessageSender jmsMessageSender = (JmsMessageSender) Main.ctx.getBean("jmsMessageSender");
 
-            final TextMessage receive = jmsMessageSender.receive(queueRequest, receiveChannel);
+            final TextMessage receive = jmsMessageSender.receive(queueRequest);
             if (receive == null)
                 continue;
 
@@ -97,7 +97,7 @@ public class Main {
                             return;
                         }
 
-                        if (!response.isEmpty()) {
+                        if (response != null) {
                             sendMessage(sendChannel, response, jmsMessageID);
                         }
                     } catch (JMSException e) {

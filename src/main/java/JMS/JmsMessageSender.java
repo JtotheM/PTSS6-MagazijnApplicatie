@@ -35,11 +35,8 @@ public class JmsMessageSender {
         return messageId;
     }
 
-    public TextMessage receive(final Destination dest, String debug) {
+    public TextMessage receive(final Destination dest) {
         while (true) {
-
-            if (!debug.isEmpty())
-                System.out.println(debug);
 
             this.jmsTemplate.setReceiveTimeout(250);
             TextMessage receive = (TextMessage) this.jmsTemplate.receive(dest);

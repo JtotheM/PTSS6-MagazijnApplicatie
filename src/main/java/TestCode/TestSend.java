@@ -27,7 +27,7 @@ public class TestSend {
             testMessage(jmsMessageSender, queueRequest);
 
             while(true) {
-                TextMessage receive = jmsMessageSender.receive(queueRequest,"tset");
+                TextMessage receive = jmsMessageSender.receive(queueRequest);
                 if( receive == null)
                     continue;
 

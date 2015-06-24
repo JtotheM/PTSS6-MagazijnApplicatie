@@ -47,29 +47,31 @@ public class Simulation {
             test.add("test");
             test.add("test2");
 
-            OfferRequest requestObject = new OfferRequest("test","test","test","test","test","test","test","test","test","test","test",test,test);
+            OfferRequest requestObject = new OfferRequest("test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", test, test);
             Gson gson = new Gson();
             sendMessage("OrderRequest", gson.toJson(requestObject), "-1");
 
             //Wait for the warehouse request
-            for( int i = 0; i < 2; i++) {
-                receive = jmsMessageSender.receive(warehouseRequest, "");
+            for (int i = 0; i < 2; i++) {
+                receive = jmsMessageSender.receive(warehouseRequest);
                 jmsMessageID = receive.getJMSMessageID();
 
                 sendMessage("WarehouseResponse", price.toString(), jmsMessageID);
             }
 
             //Wait for the main office request
-            for( int i = 0; i < 2; i++) {
-                receive = jmsMessageSender.receive(mainOfficeRequest, "");
+            for (int i = 0; i < 2; i++) {
+                receive = jmsMessageSender.receive(mainOfficeRequest);
                 jmsMessageID = receive.getJMSMessageID();
 
                 sendMessage("MainOfficeResponse", price.toString(), jmsMessageID);
             }
 
             //Wait for the total order
-            receive = jmsMessageSender.receive(orderResponse,"");
+            receive = jmsMessageSender.receive(orderResponse);
             String result = receive.getText();
+
+            System.out.println(result);
 
             ((ClassPathXmlApplicationContext) ctx).close();
 
