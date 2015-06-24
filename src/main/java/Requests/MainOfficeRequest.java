@@ -33,7 +33,7 @@ public class MainOfficeRequest extends Request {
         while (true) {
             try {
                 for (RequestValue cost : MainOfficeRequest.broakerCosts) {
-                    if (cost.getMessageId().equals(messageId)) {
+                    if (cost.getMessageId() != null && cost.getMessageId().equals(messageId)) {
                         return Integer.parseInt(cost.getValue());
                     }
                 }
