@@ -2,6 +2,7 @@ package Requests;
 
 import JMS.Main;
 import Models.OfferRequest;
+import Models.OfferRequestProcessed;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ public class OrderRequest extends Request {
             prices.add(new BroakerCost(price,"Labor: " + requestValue.getValue()));
         }
 
-        this.setResponse(gson.toJson(prices));
+        OfferRequestProcessed offerRequestProcessed = new OfferRequestProcessed(orderRequest, prices);
+        this.setResponse(gson.toJson(offerRequestProcessed));
     }
 }
