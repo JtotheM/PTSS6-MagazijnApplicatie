@@ -1,6 +1,5 @@
 package TestCode;
 
-import javax.annotation.Resource;
 import javax.jms.*;
 
 import JMS.JmsMessageSender;
@@ -18,7 +17,7 @@ import java.util.HashMap;
  * Created by Laurence on 20/6/2015.
  */
 
-public class Simulation {
+public class SimulationOrder {
 
     private static HashMap<String, String> channels;
     private static ApplicationContext ctx;
@@ -33,8 +32,8 @@ public class Simulation {
 
     private static void simulation() {
         //Get message system
-        Simulation.ctx = new ClassPathXmlApplicationContext("app-context.xml");
-        Simulation.jmsMessageSender = (JmsMessageSender) Simulation.ctx.getBean("jmsMessageSender");
+        SimulationOrder.ctx = new ClassPathXmlApplicationContext("app-context.xml");
+        SimulationOrder.jmsMessageSender = (JmsMessageSender) SimulationOrder.ctx.getBean("jmsMessageSender");
 
         String message = "";
         String jmsMessageID = "";
