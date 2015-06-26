@@ -1,8 +1,6 @@
 package Messages;
 
-import Requests.MainOfficeRequest;
-import Requests.OrderRequest;
-import Requests.WarehouseRequest;
+import Requests.*;
 
 /**
  * Created by Laurence on 20/6/2015.
@@ -23,6 +21,13 @@ public class RequestHandle {
         } else if (channel.equals("MainOfficeResponse")) {
             MainOfficeRequest mainOfficeRequest = new MainOfficeRequest(request, correlationId);
             response = mainOfficeRequest.getResponse();
+        } else if (channel.equals("orderStatus")) {
+            OrderStatus warehouseRequest = new OrderStatus(request, correlationId);
+            response = warehouseRequest.getResponse();
+        } else if (channel.equals("WarehouseStatusResponse")) {
+            WarehouseStatusRequest warehouseStatusRequest = new WarehouseStatusRequest(request, correlationId);
+            response = warehouseStatusRequest.getResponse();
+
         } else {
             System.out.println("Channel is unknown: " + channel);
             response = "Error";

@@ -32,6 +32,8 @@ public class Main {
         channels.put("OrderRequestFontys", "OrderResponseFontys"); //FontysApp
         channels.put("WarehouseResponse", "WarehouseResponseBack"); //MagazijnApp
         channels.put("MainOfficeResponse", "MainOfficeResponseBack"); //ParafiksitApp
+        channels.put("WarehouseStatusResponse", "WarehouseStatusResponseBack"); //Unknown
+        channels.put("orderStatus", "orderStatusResponse"); //Unknown
 
         ArrayList<Thread> threads = launchChannelThreads();
         waitForThreads(threads);
@@ -91,7 +93,14 @@ public class Main {
                 public void run() {
                     String message = null;
                     try {
+
                         message = receive.getText();
+
+                        //Get return address
+                        String returnAddress = receive.getStringProperty("returnAddress");
+                        if(returnAddress == null || returnAddress.isEmpty()) {
+                            returnAddress = sendChannel;
+                        }
 
                         //Handle message
                         String response = requestHandler.handleMessage(message, receiveChannel, receive.getJMSCorrelationID());
@@ -103,7 +112,7 @@ public class Main {
                         //Send response
                         String jmsMessageID = receive.getJMSMessageID();
                         if (response != null) {
-                            sendMessage(sendChannel, response, jmsMessageID);
+                            sendMessage(returnAddress, response, jmsMessageID);
                         }
 
                     } catch (JMSException e) {
