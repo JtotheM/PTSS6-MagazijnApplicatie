@@ -31,8 +31,14 @@ public class JMSConnectie {
     private Queue responseQueue;
     private Queue requestQueue;
 
+    private Queue statusResponseQueue;
+    private Queue statusRequestQueue;
+
     private MessageProducer messageProducer;
     private MessageConsumer messageConsumer;
+
+    private MessageProducer statusMessageProducer;
+    private MessageConsumer statusMessageConsumer;
 
     public JMSConnectie(Magazijn beheer) {
         try {
@@ -41,19 +47,35 @@ public class JMSConnectie {
 
             ConnectionFactory factory = getConnectionFactory();
             this.connection = factory.createConnection();
-            this.session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            this.session = this.connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            this.responseQueue = session.createQueue("WarehouseResponse");
-            this.requestQueue = session.createQueue("WarehouseRequest");
+            this.responseQueue = this.session.createQueue("WarehouseResponse");
+            this.requestQueue = this.session.createQueue("WarehouseRequest");
+            this.statusResponseQueue = this.session.createQueue("WarehouseStatusResponse");
+            this.statusRequestQueue = this.session.createQueue("WarehouseStatusRequest");
 
-            this.messageProducer = session.createProducer(responseQueue);
-            this.messageConsumer = session.createConsumer(requestQueue);
+            this.messageProducer = this.session.createProducer(this.responseQueue);
+            this.messageConsumer = this.session.createConsumer(this.requestQueue);
+
+            this.statusMessageProducer = this.session.createProducer(this.statusResponseQueue);
+            this.statusMessageConsumer = this.session.createConsumer(this.statusRequestQueue);
 
             this.messageConsumer.setMessageListener(new MessageListener() {
                 @Override
                 public void onMessage(Message msg) {
                     try {
-                        onReceiveMessage((TextMessage) msg);
+                        onWarehouseRequest((TextMessage) msg);
+                    } catch (JMSException ex) {
+                        Logger.getLogger(JMSConnectie.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+
+            this.statusMessageConsumer.setMessageListener(new MessageListener() {
+                @Override
+                public void onMessage(Message msg) {
+                    try {
+                        onWarehouseStatusRequest((TextMessage) msg);
                     } catch (JMSException ex) {
                         Logger.getLogger(JMSConnectie.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -77,28 +99,31 @@ public class JMSConnectie {
         return connectionFactory;
     }
 
-    private void sendResponse(Message originalMessage, String message) throws JMSException {
+    private void sendResponse(MessageProducer messageProducer, Message originalMessage, String message) throws JMSException {
         TextMessage textMessage = session.createTextMessage(message);
         textMessage.setJMSCorrelationID(originalMessage.getJMSMessageID());
-        sendMessage(textMessage);
+        sendMessage(messageProducer, textMessage);
     }
 
-    private void sendMessage(TextMessage textMessage) throws JMSException {
-        this.messageProducer.send(textMessage);
+    private void sendMessage(MessageProducer messageProducer, TextMessage textMessage) throws JMSException {
+        messageProducer.send(textMessage);
     }
 
-    private void onReceiveMessage(TextMessage textMessage) throws JMSException {
-
+    private void onWarehouseRequest(TextMessage textMessage) throws JMSException {
         OfferRequest offerRequest = this.gson.fromJson(textMessage.getText(), OfferRequest.class);
 
-        String clientName = offerRequest.getClientName();
-        String shippingAddress = offerRequest.getShippingAddres();
+        String clientName = offerRequest.getClient();
+        String shippingAddress = offerRequest.getShipping().toString();
 
         if (clientName != null && shippingAddress != null
                 && !clientName.isEmpty() && !shippingAddress.isEmpty()) {
-            this.beheer.VoegKlantToe(offerRequest.getClientName(), offerRequest.getShippingAddres());
+            this.beheer.VoegKlantToe(clientName, shippingAddress);
 
-            sendResponse(textMessage, "1000");
+            sendResponse(this.messageProducer, textMessage, "1000");
         }
+    }
+
+    private void onWarehouseStatusRequest(TextMessage textMessage) throws JMSException {
+        sendResponse(this.statusMessageProducer, textMessage, "ALMOST DONE");
     }
 }
