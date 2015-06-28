@@ -18,7 +18,7 @@ public class Part {
         this.description = description;
         this.price = price;
     }
-   
+
     public String getDescription() {
         return description;
     }

@@ -16,20 +16,19 @@ public class JmsMessageSender {
 
         String messageId = "";
         try {
-            BroakerMessageCreator messageCreator = new BroakerMessageCreator(text,correlationId);
+            BroakerMessageCreator messageCreator = new BroakerMessageCreator(text, correlationId);
 
             this.jmsTemplate.send(dest, messageCreator);
 
             //Retry on failed message
             Message message = messageCreator.getMessage();
-            if(message == null) {
-                return this.send(dest,text,correlationId);
+            if (message == null) {
+                return this.send(dest, text, correlationId);
             }
 
             messageId = message.getJMSMessageID();
 
         } catch (JMSException e) {
-            e.printStackTrace();
         }
 
         return messageId;
@@ -44,7 +43,6 @@ public class JmsMessageSender {
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
                 continue;
             }

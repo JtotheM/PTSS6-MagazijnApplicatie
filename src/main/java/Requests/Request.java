@@ -4,6 +4,7 @@ package Requests;
  * Created by Laurence on 20/6/2015.
  */
 public class Request {
+
     private final String request;
     private String response;
     private final String correlationId;
