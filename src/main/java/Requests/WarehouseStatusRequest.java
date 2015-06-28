@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class WarehouseStatusRequest extends Request {
 
-    private static ArrayList<RequestValue> responses = new ArrayList<RequestValue>();
+    private static final ArrayList<RequestValue> responses = new ArrayList<>();
 
     public WarehouseStatusRequest(String request, String correlationId) {
         super(request, correlationId);
@@ -33,7 +33,6 @@ public class WarehouseStatusRequest extends Request {
 
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     }

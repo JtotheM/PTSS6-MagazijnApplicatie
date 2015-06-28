@@ -2,7 +2,9 @@ package Requests;
 
 import JMS.Main;
 import Models.OfferRequest;
-import Models.OfferRequestProcessed;
+import Models.OfferResponse;
+import Models.Part;
+import Models.WorkPerformed;
 import Models.WorkRequest;
 import com.google.gson.Gson;
 
@@ -24,53 +26,55 @@ public class OrderRequest extends Request {
         OfferRequest orderRequest = gson.fromJson(this.getRequest(), OfferRequest.class);
 
         //Ask warehouse and main office for prices
-        ArrayList<BroakerCost> prices = new ArrayList<BroakerCost>();
-        requestWarehousePrice(orderRequest, prices);
-        requestMainOfficePrice(gson, orderRequest, prices);
+        ArrayList<Part> parts = new ArrayList<>();
+        ArrayList<WorkPerformed> workPerformed = new ArrayList<>();
+
+        requestWarehousePrice(orderRequest, parts);
+        requestMainOfficePrice(gson, orderRequest, workPerformed);
 
         //Return result
-        OfferRequestProcessed offerRequestProcessed = new OfferRequestProcessed(orderRequest, prices);
+        OfferResponse offerRequestProcessed = new OfferResponse(orderRequest, workPerformed, parts);
         this.setResponse(gson.toJson(offerRequestProcessed));
     }
 
-    private void requestMainOfficePrice(Gson gson, OfferRequest orderRequest, ArrayList<BroakerCost> prices) {
+    private void requestMainOfficePrice(Gson gson, OfferRequest orderRequest, ArrayList<WorkPerformed> workPerformed) {
 
         //Get operation cost
-        ArrayList<String> operations = orderRequest.getOpperations();
-        ArrayList<RequestValue> operationsRequest = new ArrayList<RequestValue>();
+        ArrayList<String> operations = orderRequest.getOperations();
+        ArrayList<RequestValue> operationsRequest = new ArrayList<>();
         for (String operation : operations) {
-            WorkRequest workRequest = new WorkRequest(orderRequest,operation);
+            WorkRequest workRequest = new WorkRequest(orderRequest, operation);
             String json = gson.toJson(workRequest);
 
             String operationRequest = Main.sendMessage("MainOfficeRequest", json, "-1");
-            operationsRequest.add(new RequestValue(operationRequest,operation));
+            operationsRequest.add(new RequestValue(operationRequest, operation));
         }
 
         //Request all Warehouse prices
-        for( RequestValue requestValue : operationsRequest) {
+        for (RequestValue requestValue : operationsRequest) {
             Integer price = MainOfficeRequest.getPrice(requestValue.getMessageId());
-            prices.add(new BroakerCost(price,"Labor: " + requestValue.getValue()));
+            workPerformed.add(new WorkPerformed("Labor: " + requestValue.getValue(), price));
         }
     }
 
-    private void requestWarehousePrice(OfferRequest orderRequest, ArrayList<BroakerCost> prices) {
+    private void requestWarehousePrice(OfferRequest orderRequest, ArrayList<Part> parts) {
         Gson gson = new Gson();
 
         //Ask the main office for process
-        ArrayList<String> parts = orderRequest.getParts();
-        ArrayList<RequestValue> warehouseRequests = new ArrayList<RequestValue>();
-        for (String part : parts) {
-            WorkRequest workRequest = new WorkRequest(orderRequest,part);
+        ArrayList<String> partIdentifiers = orderRequest.getParts();
+        ArrayList<RequestValue> warehouseRequests = new ArrayList<>();
+        for (String partIdentifier : partIdentifiers) {
+            WorkRequest workRequest = new WorkRequest(orderRequest, partIdentifier);
             String json = gson.toJson(workRequest);
 
             String warehouseRequest = Main.sendMessage("WarehouseRequest", json, "-1");
-            warehouseRequests.add(new RequestValue(warehouseRequest,part));
+            warehouseRequests.add(new RequestValue(warehouseRequest, partIdentifier));
         }
 
         //Request all main office prices
-        for( RequestValue requestValue : warehouseRequests) {
+        for (RequestValue requestValue : warehouseRequests) {
             Integer price = WarehouseRequest.getPrice(requestValue.getMessageId());
-            prices.add(new BroakerCost(price,"Part: " + requestValue.getValue()));
+            parts.add(new Part("Part: " + requestValue.getValue(), price));
         }
     }
 }

@@ -4,9 +4,9 @@ package Requests;
  * Created by Laurence on 20/6/2015.
  */
 public class Request {
-    private String request;
+    private final String request;
     private String response;
-    private String correlationId;
+    private final String correlationId;
 
     public Request(String request, String correlationId) {
         this.request = request;

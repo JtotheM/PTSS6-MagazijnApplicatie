@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class MainOfficeRequest extends Request {
 
-    private static ArrayList<RequestValue> broakerCosts = new ArrayList<RequestValue>();
+    private static final ArrayList<RequestValue> broakerCosts = new ArrayList<>();
 
     public MainOfficeRequest(String request, String correlationId) {
         super(request, correlationId);
@@ -23,7 +23,6 @@ public class MainOfficeRequest extends Request {
         try {
             price = Integer.parseInt(request);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
         }
 
         broakerCosts.add(new RequestValue(this.getCorrelationId(), price.toString()));
@@ -39,9 +38,9 @@ public class MainOfficeRequest extends Request {
                         return Integer.parseInt(cost.getValue());
                     }
                 }
+
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     }

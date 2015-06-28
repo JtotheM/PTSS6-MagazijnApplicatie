@@ -4,8 +4,9 @@ package Requests;
  * Created by Laurence on 22/6/2015.
  */
 public class RequestValue {
-    private String messageId;
-    private String value;
+
+    private final String messageId;
+    private final String value;
 
     public RequestValue(String messageId, String value) {
         this.messageId = messageId;

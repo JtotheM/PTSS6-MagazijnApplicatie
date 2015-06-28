@@ -4,6 +4,7 @@ package Requests;
  * Created by Laurence on 22/6/2015.
  */
 public class BroakerCost {
+
     private Integer prices;
     private String operation;
 

@@ -5,69 +5,38 @@ package Models;
  */
 public class WorkRequest {
 
-    private String client;
-    private String clientName;
-    private String ContactPerson;
-    private String Phone;
-    private String ShippingAddres ;
-    private String Street ;
-    private String HouseNumber ;
-    private String Zipcode ;
-    private String City ;
-    private String itemToBuy ;
+    private final String client;
+    private final ContactPersoon contactPersoon;
+    private final Address shipping;
+    private final String part;
 
-    public WorkRequest(OfferRequest offerRequest, String itemToBuy) {
-        this.client = offerRequest.getClient();
-        this.clientName = offerRequest.getClientName();
-        this.ContactPerson = offerRequest.getContactPerson();
-        this.Phone = offerRequest.getPhone();
-        this.ShippingAddres = offerRequest.getShippingAddres();
-        this.Street = offerRequest.getStreet();
-        this.HouseNumber = offerRequest.getHouseNumber();
-        this.Zipcode = offerRequest.getZipcode();
-        this.City = offerRequest.getCity();
-        this.itemToBuy = itemToBuy;
+    public WorkRequest(String client, ContactPersoon contactPersoon, Address shipping, String part) {
+        this.client = client;
+        this.contactPersoon = contactPersoon;
+        this.shipping = shipping;
+        this.part = part;
+    }
+
+    public WorkRequest(OfferRequest orderRequest, String part) {
+        this.client = orderRequest.getClient();
+        this.contactPersoon = orderRequest.getContactPersoon();
+        this.shipping = orderRequest.getShipping();
+        this.part = part;
     }
 
     public String getClient() {
         return client;
     }
 
-    public String getClientName() {
-        return clientName;
+    public ContactPersoon getContactPersoon() {
+        return contactPersoon;
     }
 
-    public String getContactPerson() {
-        return ContactPerson;
+    public Address getShipping() {
+        return shipping;
     }
 
-    public String getPhone() {
-        return Phone;
-    }
-
-    public String getShippingAddres() {
-        return ShippingAddres;
-    }
-
-    public String getStreet() {
-        return Street;
-    }
-
-    public String getHouseNumber() {
-        return HouseNumber;
-    }
-
-    public String getZipcode() {
-        return Zipcode;
-    }
-
-    public String getCity() {
-        return City;
-    }
-
-    public String getItemToBuy() {
-        return itemToBuy;
+    public String getPart() {
+        return part;
     }
 }
-
-

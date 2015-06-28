@@ -15,10 +15,9 @@ import java.util.*;
 /**
  * Created by Laurence on 20/6/2015.
  */
-
 public class Main {
 
-    private static RequestHandle requestHandler = new RequestHandle();
+    private static final RequestHandle requestHandler = new RequestHandle();
     private static HashMap<String, String> channels;
     private static ApplicationContext ctx;
 
@@ -27,7 +26,7 @@ public class Main {
         Main.ctx = new ClassPathXmlApplicationContext("app-context.xml");
 
         //Channels that we support. The Request Handle will handle them on chanel name
-        channels = new HashMap<String, String>();
+        channels = new HashMap<>();
         channels.put("OrderRequest", "OrderResponse"); //ParafiksitWebI
         channels.put("OrderRequestFontys", "OrderResponseFontys"); //FontysApp
         channels.put("WarehouseResponse", "WarehouseResponseBack"); //MagazijnApp
@@ -42,13 +41,14 @@ public class Main {
     private static ArrayList<Thread> launchChannelThreads() {
 
         //Launch a thread for every channel
-        ArrayList<Thread> threads = new ArrayList<Thread>();
+        ArrayList<Thread> threads = new ArrayList<>();
         Iterator channelIterator = channels.entrySet().iterator();
         while (channelIterator.hasNext()) {
             final Map.Entry pair = (Map.Entry) channelIterator.next();
 
             //Start the thread
             Thread channelThread = new Thread(new Runnable() {
+                @Override
                 public void run() {
                     handleChannel((String) pair.getKey(), (String) pair.getValue());
                 }
@@ -69,7 +69,6 @@ public class Main {
                 }
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
@@ -78,18 +77,20 @@ public class Main {
         //Get channels
         Queue queueRequest = new ActiveMQQueue(receiveChannel);
 
-        final List<Thread> processors = new ArrayList<Thread>();
+        final List<Thread> processors = new ArrayList<>();
 
         //Keep requesting data
         while (true) {
             JmsMessageSender jmsMessageSender = (JmsMessageSender) Main.ctx.getBean("jmsMessageSender");
 
             final TextMessage receive = jmsMessageSender.receive(queueRequest);
-            if (receive == null)
+            if (receive == null) {
                 continue;
+            }
 
             //Handle the message in another thread. Now you can handle multiple requests
             Thread handler = new Thread(new Runnable() {
+                @Override
                 public void run() {
                     String message = null;
                     try {
@@ -98,7 +99,7 @@ public class Main {
 
                         //Get return address
                         String returnAddress = receive.getStringProperty("returnAddress");
-                        if(returnAddress == null || returnAddress.isEmpty()) {
+                        if (returnAddress == null || returnAddress.isEmpty()) {
                             returnAddress = sendChannel;
                         }
 
@@ -116,7 +117,6 @@ public class Main {
                         }
 
                     } catch (JMSException e) {
-                        e.printStackTrace();
                     }
                 }
             });

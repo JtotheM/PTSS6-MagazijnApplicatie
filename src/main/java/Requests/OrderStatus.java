@@ -7,7 +7,6 @@ import JMS.Main;
  */
 public class OrderStatus extends Request {
 
-
     public OrderStatus(String request, String correlationId) {
         super(request, correlationId);
         process();
