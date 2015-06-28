@@ -22,6 +22,7 @@ import DAO.Magazijn;
 
 public class JMSConnectie {
 
+    private Gson gson;
     private Magazijn beheer;
 
     private Connection connection;
@@ -35,19 +36,20 @@ public class JMSConnectie {
 
     public JMSConnectie(Magazijn beheer) {
         try {
+            this.gson = new Gson();
             this.beheer = beheer;
 
             ConnectionFactory factory = getConnectionFactory();
-            connection = factory.createConnection();
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            this.connection = factory.createConnection();
+            this.session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            responseQueue = session.createQueue("WarehouseResponse");
-            requestQueue = session.createQueue("WarehouseRequest");
+            this.responseQueue = session.createQueue("WarehouseResponse");
+            this.requestQueue = session.createQueue("WarehouseRequest");
 
-            messageProducer = session.createProducer(responseQueue);
-            messageConsumer = session.createConsumer(requestQueue);
+            this.messageProducer = session.createProducer(responseQueue);
+            this.messageConsumer = session.createConsumer(requestQueue);
 
-            messageConsumer.setMessageListener(new MessageListener() {
+            this.messageConsumer.setMessageListener(new MessageListener() {
                 public void onMessage(Message msg) {
                     try {
                         onReceiveMessage((TextMessage) msg);
@@ -57,7 +59,7 @@ public class JMSConnectie {
                 }
             });
 
-            connection.start();
+            this.connection.start();
         } catch (JMSException ex) {
             Logger.getLogger(JMSConnectie.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NamingException ex) {
@@ -72,6 +74,7 @@ public class JMSConnectie {
 
         Context jndiContext = new InitialContext(props);
         ConnectionFactory connectionFactory = (ConnectionFactory) jndiContext.lookup("ConnectionFactory");
+
         return connectionFactory;
     }
 
@@ -82,15 +85,21 @@ public class JMSConnectie {
     }
 
     private void sendMessage(TextMessage textMessage) throws JMSException {
-        messageProducer.send(textMessage);
+        this.messageProducer.send(textMessage);
     }
 
     private void onReceiveMessage(TextMessage textMessage) throws JMSException {
-        Gson gson = new Gson();
-        OfferRequest offerRequest = gson.fromJson(textMessage.getText(), OfferRequest.class);
 
-        beheer.VoegKlantToe(offerRequest.getClientName(), offerRequest.getShippingAddres());
+        OfferRequest offerRequest = this.gson.fromJson(textMessage.getText(), OfferRequest.class);
 
-        sendResponse(textMessage, "1000");
+        String clientName = offerRequest.getClientName();
+        String shippingAddress = offerRequest.getShippingAddres();
+
+        if (clientName != null && shippingAddress != null
+                && !clientName.isEmpty() && !shippingAddress.isEmpty()) {
+            this.beheer.VoegKlantToe(offerRequest.getClientName(), offerRequest.getShippingAddres());
+
+            sendResponse(textMessage, "1000");
+        }
     }
 }
