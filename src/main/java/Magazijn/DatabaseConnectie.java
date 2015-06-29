@@ -4,7 +4,10 @@ import domain.Klant;
 import domain.Onderdeel;
 import domain.Factuur;
 import domain.FactuurRegel;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -32,22 +35,29 @@ public class DatabaseConnectie {
     public DatabaseConnectie() {
         try {
             Properties pr = new Properties();
-            pr.load(new FileInputStream("db.properties"));
+            File databaseProperties = new File("db.properties");
+            if (databaseProperties.exists() == false) {
+                databaseProperties.createNewFile();
+            }
+
+            pr.load(new FileInputStream(databaseProperties));
+            
             serverEnPort = pr.getProperty("ServerEnPort");
             username = pr.getProperty("Username");
             password = pr.getProperty("Password");
+            
             url = "jdbc:oracle:thin:@" + serverEnPort + ":xe";
             Class.forName("oracle.jdbc.driver.OracleDriver");
             conn = DriverManager.getConnection(url, this.username, this.password);
             conn.setAutoCommit(true);
-        } catch (Exception ex) {
+        } catch (IOException | ClassNotFoundException | SQLException ex) {
             JOptionPane.showMessageDialog(null, "De database connectie is niet goed verlopen, fout bij IP:Port, Username of Password! \r\n" + ex.getMessage(), "Database - Error!", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
     }
 
     public ArrayList<Onderdeel> GetOnderdelen() {
-        ArrayList<Onderdeel> ond = new ArrayList<Onderdeel>();
+        ArrayList<Onderdeel> ond = new ArrayList<>();
         Statement st = null;
         ResultSet rs = null;
         try {

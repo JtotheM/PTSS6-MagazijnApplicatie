@@ -120,7 +120,10 @@ public class JMSConnectie {
             this.beheer.VoegKlantToe(clientName, shippingAddress);
 
             sendResponse(this.messageProducer, textMessage, "1000");
+            return;
         }
+
+        sendResponse(this.messageProducer, textMessage, "0");
     }
 
     private void onWarehouseStatusRequest(TextMessage textMessage) throws JMSException {

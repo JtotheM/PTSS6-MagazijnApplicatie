@@ -34,6 +34,16 @@
             <version>1.03</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>classes12</artifactId>
+            <version>10.2.0.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>5.8.0</version>
+        </dependency>
     </dependencies>
     
     <properties>
